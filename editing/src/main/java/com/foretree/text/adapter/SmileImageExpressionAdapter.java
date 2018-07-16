@@ -20,7 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
 import com.foretree.text.R;
-import com.foretree.text.SmileUtils;
+import com.foretree.text.EmojiManager;
 
 import java.util.List;
 
@@ -45,7 +45,7 @@ public class SmileImageExpressionAdapter extends ArrayAdapter<String> {
             int resId = getContext().getResources().getIdentifier(filename, "drawable", getContext().getPackageName());
             imageView.setImageResource(resId);
         } else {
-            int resId = SmileUtils.getRedId(filename);
+            int resId = EmojiManager.getInstance().getRedId(filename);
             imageView.setImageResource(resId);
         }
         return convertView;

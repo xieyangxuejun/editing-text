@@ -46,7 +46,7 @@ public class TextCommonUtils {
         if (TextUtils.isEmpty(text)) {
             tv.setText("");
         }
-        Spannable spannable = SmileUtils.unicodeToEmojiName(context, text);
+        Spannable spannable = EmojiManager.getInstance().unicodeToEmojiName(context, text);
         tv.setText(spannable);
     }
 
@@ -77,7 +77,7 @@ public class TextCommonUtils {
         if (TextUtils.isEmpty(text)) {
             return new SpannableString("");
         }
-        return SmileUtils.unicodeToEmojiName(context, text, size, verticalAlignment);
+        return EmojiManager.getInstance().unicodeToEmojiName(context, text, size, verticalAlignment);
 
     }
 
@@ -201,7 +201,7 @@ public class TextCommonUtils {
                 }
             }
         }
-        SmileUtils.addSmiles(context, textView.emojiSize(), textView.verticalAlignment(), spannableString);
+        EmojiManager.getInstance().addSmiles(context, textView.emojiSize(), textView.verticalAlignment(), spannableString);
         if (clickable && hadHighLine)
             textView.setMovementMethod(LinkMovementMethod.getInstance());
         return spannableString;
@@ -387,7 +387,7 @@ public class TextCommonUtils {
                     }
                     style.setSpan(atUserSpan, sp.getSpanStart(atUserSpan), sp.getSpanEnd(atUserSpan), Spanned.SPAN_MARK_POINT);
                 }
-                SmileUtils.addSmiles(context, textView.emojiSize(), textView.verticalAlignment(), style);
+                EmojiManager.getInstance().addSmiles(context, textView.emojiSize(), textView.verticalAlignment(), style);
                 textView.setAutoLinkMask(0);
                 return style;
             } else {

@@ -11,4 +11,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+    <com.foretree.text.EmojiLayout
+        android:id="@+id/emoji_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/et_input"
+        app:richLayoutNumColumns="7"
+        app:richLayoutNumRows="3"
+        app:richMarginBottom="8dp"
+        app:richMarginTop="15dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

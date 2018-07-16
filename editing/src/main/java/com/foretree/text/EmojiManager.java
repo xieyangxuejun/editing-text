@@ -1,9 +1,6 @@
 package com.foretree.text;
 
-/**
- * 表情工具类
- * Created by shuyu on 2016/11/14.
- */
+
 
 import android.content.Context;
 import android.graphics.Color;
@@ -14,7 +11,6 @@ import android.text.SpannableStringBuilder;
 import android.text.style.CharacterStyle;
 import android.text.style.ForegroundColorSpan;
 import android.widget.EditText;
-
 
 import com.foretree.text.span.CenteredImageSpan;
 
@@ -27,17 +23,30 @@ import java.util.regex.Pattern;
 
 import static android.text.style.DynamicDrawableSpan.ALIGN_BOTTOM;
 
-public class SmileUtils {
+/**
+ * 表情工具类
+ * Created by Silen on 2018/7/14.
+ */
+public class EmojiManager {
 
-    private static final Spannable.Factory spannableFactory = Spannable.Factory
-            .getInstance();
+    private final Spannable.Factory spannableFactory = Spannable.Factory.getInstance();
 
-    private static final Map<Pattern, Integer> emoticons = new HashMap<Pattern, Integer>();
+    private final Map<Pattern, Integer> emoticons = new HashMap<>();
 
-    private static final List<String> textList = new ArrayList<>();
+    private final List<String> textList = new ArrayList<>();
 
     public Map<Pattern, Integer> getEmotions() {
         return emoticons;
+    }
+
+    private static EmojiManager mInstance;
+
+    static class Holder {
+        static EmojiManager holder = new EmojiManager();
+    }
+
+    public static EmojiManager getInstance() {
+        return Holder.holder;
     }
 
     /**
@@ -47,9 +56,19 @@ public class SmileUtils {
      * @param smile    文本
      * @param resource 显示图片表情列表
      */
-    private static void addPattern(Map<Pattern, Integer> map, String smile,
-                                   int resource) {
+    private void addPattern(Map<Pattern, Integer> map, String smile,
+                            int resource) {
         map.put(Pattern.compile(Pattern.quote(smile)), resource);
+    }
+
+    /**
+     * @param smile    文本列表
+     * @param resource 显示图片表情列表
+     */
+    public void addPatternAll(List<String> smile,
+                              List<Integer> resource) {
+
+        addPatternAll(emoticons, smile, resource);
     }
 
     /**
@@ -59,8 +78,8 @@ public class SmileUtils {
      * @param smile    文本列表
      * @param resource 显示图片表情列表
      */
-    public static void addPatternAll(Map<Pattern, Integer> map, List<String> smile,
-                                     List<Integer> resource) {
+    public void addPatternAll(Map<Pattern, Integer> map, List<String> smile,
+                              List<Integer> resource) {
 
         map.clear();
         textList.clear();
@@ -84,10 +103,10 @@ public class SmileUtils {
      * @param string 需要转化文本
      * @return
      */
-    public static int getRedId(String string) {
+    public int getRedId(String string) {
         for (Map.Entry<Pattern, Integer> entry : emoticons.entrySet()) {
             Matcher matcher = entry.getKey().matcher(string);
-            while (matcher.find()) {
+            if (matcher.find()) {
                 return entry.getValue();
             }
         }
@@ -102,14 +121,14 @@ public class SmileUtils {
      * @param size      显示大小
      * @param name      需要转化的文本
      */
-    public static void insertIcon(EditText editText, int maxLength, int size, String name) {
+    public void insertIcon(EditText editText, int maxLength, int size, String name) {
 
         String curString = editText.toString();
         if ((curString.length() + name.length()) > maxLength) {
             return;
         }
 
-        int resId = SmileUtils.getRedId(name);
+        int resId = getRedId(name);
 
         Drawable drawable = editText.getResources().getDrawable(resId);
         if (drawable == null)
@@ -137,7 +156,7 @@ public class SmileUtils {
      * @param spannable 显示的span
      * @return 是否添加
      */
-    public static boolean addSmiles(Context context, Spannable spannable) {
+    public boolean addSmiles(Context context, Spannable spannable) {
         return addSmiles(context, -1, spannable);
     }
 
@@ -149,7 +168,7 @@ public class SmileUtils {
      * @param spannable 显示的span
      * @return 是否添加
      */
-    public static boolean addSmiles(Context context, int size, Spannable spannable) {
+    public boolean addSmiles(Context context, int size, Spannable spannable) {
         return addSmiles(context, size, ALIGN_BOTTOM, spannable);
     }
 
@@ -163,7 +182,7 @@ public class SmileUtils {
      * @param verticalAlignment 垂直方向
      * @return 是否添加
      */
-    public static boolean addSmiles(Context context, int size, int verticalAlignment, Spannable spannable) {
+    public boolean addSmiles(Context context, int size, int verticalAlignment, Spannable spannable) {
         boolean hasChanges = false;
         for (Map.Entry<Pattern, Integer> entry : emoticons.entrySet()) {
             Matcher matcher = entry.getKey().matcher(spannable);
@@ -201,21 +220,21 @@ public class SmileUtils {
     }
 
 
-    public static Spannable getSmiledText(Context context, CharSequence text) {
+    public Spannable getSmiledText(Context context, CharSequence text) {
         return getSmiledText(context, text, -1);
     }
 
-    public static Spannable getSmiledText(Context context, CharSequence text, int size) {
+    public Spannable getSmiledText(Context context, CharSequence text, int size) {
         return getSmiledText(context, text, size, ALIGN_BOTTOM);
     }
 
-    public static Spannable getSmiledText(Context context, CharSequence text, int size, int verticalAlignment) {
+    public Spannable getSmiledText(Context context, CharSequence text, int size, int verticalAlignment) {
         Spannable spannable = spannableFactory.newSpannable(text);
         addSmiles(context, size, verticalAlignment, spannable);
         return spannable;
     }
 
-    public static boolean containsKey(String key) {
+    public boolean containsKey(String key) {
         boolean b = false;
         for (Map.Entry<Pattern, Integer> entry : emoticons.entrySet()) {
             Matcher matcher = entry.getKey().matcher(key);
@@ -228,11 +247,11 @@ public class SmileUtils {
         return b;
     }
 
-    public static Map<Pattern, Integer> getEmoticons() {
+    public Map<Pattern, Integer> getEmoticons() {
         return emoticons;
     }
 
-    public static String stringToUnicode(String string) {
+    public String stringToUnicode(String string) {
 
         StringBuffer unicode = new StringBuffer();
 
@@ -248,7 +267,7 @@ public class SmileUtils {
         return "[" + unicode.toString() + "]";
     }
 
-    public static String unicode2String(String unicode) {
+    public String unicode2String(String unicode) {
 
         StringBuffer string = new StringBuffer();
 
@@ -266,10 +285,10 @@ public class SmileUtils {
         return string.toString();
     }
 
-    public static String[] specials = {"\\", "\\/", "*", ".", "?", "+", "$",
+    public String[] specials = {"\\", "\\/", "*", ".", "?", "+", "$",
             "^", "[", "]", "(", ")", "{", "}", "|"};
 
-    public static SpannableStringBuilder highlight(String text, String target) {
+    public SpannableStringBuilder highlight(String text, String target) {
         SpannableStringBuilder spannable = new SpannableStringBuilder(text);
         CharacterStyle span = null;
         for (int i = 0; i < specials.length; i++) {
@@ -287,7 +306,7 @@ public class SmileUtils {
         return spannable;
     }
 
-    public static SpannableStringBuilder highlight(Spannable text, String target) {
+    public SpannableStringBuilder highlight(Spannable text, String target) {
         SpannableStringBuilder spannable = new SpannableStringBuilder(text);
         CharacterStyle span = null;
         Pattern p = Pattern.compile(target);
@@ -300,7 +319,7 @@ public class SmileUtils {
         return spannable;
     }
 
-    public static SpannableStringBuilder highlight(String text) {
+    public SpannableStringBuilder highlight(String text) {
         SpannableStringBuilder spannable = new SpannableStringBuilder(text);
         CharacterStyle span = null;
         span = new ForegroundColorSpan(Color.rgb(253, 113, 34));// 需要重复！
@@ -309,22 +328,22 @@ public class SmileUtils {
         return spannable;
     }
 
-    public static Spannable unicodeToEmojiName(Context context, String content, int size, int verticalAlignment) {
+    public Spannable unicodeToEmojiName(Context context, String content, int size, int verticalAlignment) {
         Spannable spannable = getSmiledText(context, content, size, verticalAlignment);
         return spannable;
     }
 
-    public static Spannable unicodeToEmojiName(Context context, String content, int size) {
+    public Spannable unicodeToEmojiName(Context context, String content, int size) {
         Spannable spannable = getSmiledText(context, content, size);
         return spannable;
     }
 
-    public static Spannable unicodeToEmojiName(Context context, String content) {
+    public Spannable unicodeToEmojiName(Context context, String content) {
         Spannable spannable = getSmiledText(context, content, -1);
         return spannable;
     }
 
-    public static List<String> getTextList() {
+    public List<String> getTextList() {
         return textList;
     }
 }

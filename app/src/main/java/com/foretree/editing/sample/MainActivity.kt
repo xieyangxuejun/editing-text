@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
+import com.foretree.text.EmojiManager
 import com.foretree.text.RichEditBuilder
 import com.foretree.text.support.TwitterModel
 import com.foretree.text.listener.OnEditTextUtilJumpListener
@@ -16,6 +17,7 @@ import com.foretree.text.listener.SpanUrlCallBack
 import com.foretree.text.support.TwitterHelper
 import com.twitter.text.Extractor
 import kotlinx.android.synthetic.main.activity_main.*
+import java.util.ArrayList
 
 
 class MainActivity : AppCompatActivity() {
@@ -26,6 +28,14 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val data = ArrayList<Int>()
+        val strings = ArrayList<String>()
+        for (i in 1..30) {
+            val resId = resources.getIdentifier("e$i", "drawable", packageName)
+            data.add(resId)
+            strings.add("[e$i]")
+        }
+        EmojiManager.getInstance().addPatternAll(strings, data)
         setContentView(R.layout.activity_main)
 
         val spanUrlCallBack = object : SpanUrlCallBack {
@@ -105,6 +115,8 @@ class MainActivity : AppCompatActivity() {
             et_input.resolveAtResult(TwitterHelper.convert(cashModels[1]))
             et_input.resolveTopicResult(TwitterHelper.convert(hashModels[0]))
             et_input.resolveTopicResult(TwitterHelper.convert(hashModels[1]))
+
+            emoji_layout.editTextSmile = et_input
 
         }
     }

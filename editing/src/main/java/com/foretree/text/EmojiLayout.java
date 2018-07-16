@@ -124,7 +124,7 @@ public class EmojiLayout extends LinearLayout {
         int marginSize = dip2px(getContext(), 5);
 
         // 表情list
-        reslist = SmileUtils.getTextList();
+        reslist = EmojiManager.getInstance().getTextList();
 
         int viewSize = (int) Math.ceil(reslist.size() * 1.0f / pageCount);
 
@@ -182,8 +182,8 @@ public class EmojiLayout extends LinearLayout {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String filename = smileImageExpressionAdapter.getItem(position);
                 try {
+                    String filename = smileImageExpressionAdapter.getItem(position);
                     if (!deleteIconName.equals(filename)) { // 不是删除键，显示表情
                         (editTextEmoji).insertIcon(filename);
                     } else { // 删除文字或者表情
@@ -197,7 +197,7 @@ public class EmojiLayout extends LinearLayout {
                                 int end = tempStr.lastIndexOf("]");// 获取最后一个表情的位置
                                 if (i != -1 && end == (selectionStart - 1)) {
                                     CharSequence cs = tempStr.substring(i, selectionStart);
-                                    if (SmileUtils.containsKey(cs.toString()))
+                                    if (EmojiManager.getInstance().containsKey(cs.toString()))
                                         editTextEmoji.getEditableText().delete(i, selectionStart);
                                     else
                                         editTextEmoji.getEditableText().delete(selectionStart - 1,

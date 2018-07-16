@@ -384,12 +384,12 @@ public class RichEditText extends MentionEditText {
             }
 
             spannable = spannableStringBuilder;
-            SmileUtils.addSmiles(context, spannable);
+            EmojiManager.getInstance().addSmiles(context, spannable);
         } else {
             spannable = TextCommonUtils.getEmojiText(context, text);
 
         }
-        SmileUtils.addSmiles(context, spannable);
+        EmojiManager.getInstance().addSmiles(context, spannable);
         return spannable;
     }
 
@@ -666,7 +666,7 @@ public class RichEditText extends MentionEditText {
             return;
         }
 
-        int resId = SmileUtils.getRedId(name);
+        int resId = EmojiManager.getInstance().getRedId(name);
 
         Drawable drawable = this.getResources().getDrawable(resId);
         if (drawable == null)
